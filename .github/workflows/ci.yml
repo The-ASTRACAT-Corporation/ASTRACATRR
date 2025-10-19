@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, debian-11]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake pkg-config libknot-dev libkres-dev lua5.3-dev liblua5.3-dev clang-tidy
+
+    - name: Configure and build
+      run: |
+        cmake -B build -DENABLE_LUA=ON
+        cmake --build build
+
+    - name: Run linter
+      run: |
+        clang-tidy src/*.c -- -Iinclude
+
+    - name: Run tests
+      run: |
+        echo "Running tests..."
+        ./build/astracat-test
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: astracat-resolver-${{ matrix.os }}
+        path: build/astracat-resolver
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        tags: user/astracat-resolver:latest
