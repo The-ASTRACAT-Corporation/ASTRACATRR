@@ -26,10 +26,10 @@ apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
     pkg-config \
-    libknot-dev \
-    libkres-dev \
+    knot-resolver-dev \
     libuv1-dev \
     libssl-dev \
+    libluajit-5.1-dev \
     lua5.3-dev
 
 echo "Dependencies installed successfully."

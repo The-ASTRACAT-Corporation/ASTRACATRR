@@ -18,8 +18,7 @@ RUN apt-get update && \
     build-essential \
     cmake \
     pkg-config \
-    libknot-dev \
-    libkres-dev \
+    knot-resolver-dev \
     libuv1-dev \
     libssl-dev \
     libluajit-5.1-dev \
