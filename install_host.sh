@@ -14,11 +14,14 @@ echo "Installing dependencies..."
 
 # Install tools for adding the CZ.NIC Labs repository
 apt-get update
-apt-get install -y --no-install-recommends apt-transport-https ca-certificates wget
+apt-get install -y --no-install-recommends apt-transport-https ca-certificates wget lsb-release
+
+# Get OS codename
+CODENAME=$(lsb_release -cs)
 
 # Add the CZ.NIC Labs GPG key and repository
 wget -O /usr/share/keyrings/cznic-labs-pkg.gpg https://pkg.labs.nic.cz/gpg
-echo "deb [signed-by=/usr/share/keyrings/cznic-labs-pkg.gpg] https://pkg.labs.nic.cz/knot-resolver bullseye main" > /etc/apt/sources.list.d/cznic-labs-knot-resolver.list
+echo "deb [signed-by=/usr/share/keyrings/cznic-labs-pkg.gpg] https://pkg.labs.nic.cz/knot-resolver ${CODENAME} main" > /etc/apt/sources.list.d/cznic-labs-knot-resolver.list
 
 # Update package lists and install build dependencies
 apt-get update
